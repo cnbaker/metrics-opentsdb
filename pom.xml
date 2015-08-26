@@ -9,7 +9,7 @@
 
     <groupId>com.github.sps.metrics</groupId>
     <artifactId>metrics-opentsdb</artifactId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.4.sdl20150826</version>
     <packaging>jar</packaging>
 
     <name>metrics-opentsdb</name>
@@ -249,14 +249,16 @@
     </profiles>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
         <repository>
-            <id>sonatype-nexus-staging</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>deployment</id>
+            <name>Internal Releases</name>
+            <url>http://gdev04:8081/nexus/content/repositories/releases/</url>
         </repository>
+        <snapshotRepository>
+            <id>deployment</id>
+            <name>Internal Releases</name>
+            <url>http://gdev04:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
     </distributionManagement>
 
 </project>
