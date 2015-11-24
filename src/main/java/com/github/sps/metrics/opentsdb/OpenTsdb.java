@@ -15,14 +15,17 @@
  */
 package com.github.sps.metrics.opentsdb;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
+import com.fasterxml.jackson.jaxrs.annotation.JacksonFeatures;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.glassfish.jersey.jettison.JettisonFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,10 +33,9 @@ import java.util.Set;
 
 /**
  * OpenTSDB 2.0 jersey based REST client
- * <p/>
- * {@link http://opentsdb.net/docs/build/html/api_http/index.html#version-1-x-to-2-x}
+ * {@linktourl http://opentsdb.net/docs/build/html/api_http/index.html#version-1-x-to-2-x}
  *
- * @author Sean Scanlon <sean.scanlon@gmail.com>
+ * @author Sean Scanlon sean.scanlon@gmail.com
  */
 public class OpenTsdb {
 
@@ -57,11 +59,11 @@ public class OpenTsdb {
      *
      * @param apiResource
      */
-    public static OpenTsdb create(WebResource apiResource) {
+    public static OpenTsdb create(WebTarget apiResource) {
         return new OpenTsdb(apiResource);
     }
 
-    private final WebResource apiResource;
+    private final WebTarget apiResource;
     private int batchSizeLimit = DEFAULT_BATCH_SIZE_LIMIT;
 
     public static class Builder {
@@ -88,20 +90,22 @@ public class OpenTsdb {
         }
     }
 
-    private OpenTsdb(WebResource apiResource) {
+    private OpenTsdb(WebTarget apiResource) {
         this.apiResource = apiResource;
     }
 
     private OpenTsdb(String baseURL, Integer connectionTimeout, Integer readTimeout) {
 
-        final ClientConfig clientConfig = new DefaultClientConfig();
-        clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        final ClientConfig clientConfig = new ClientConfig();
+        clientConfig.register(JettisonFeature.class);
+//        clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
 
-        final Client client = Client.create(clientConfig);
-        client.setConnectTimeout(connectionTimeout);
-        client.setReadTimeout(readTimeout);
+        Client client = JerseyClientBuilder.createClient(clientConfig);
+        client.property(ClientProperties.READ_TIMEOUT, connectionTimeout);
+        client.property(ClientProperties.CONNECT_TIMEOUT, readTimeout);
 
-        this.apiResource = client.resource(baseURL);
+
+        this.apiResource = client.target(baseURL);
     }
 
     public void setBatchSizeLimit(int batchSizeLimit) {
@@ -152,9 +156,8 @@ public class OpenTsdb {
         if (!metrics.isEmpty()) {
             try {
                 apiResource.path("/api/put")
-                        .type(MediaType.APPLICATION_JSON)
-                        .entity(metrics)
-                        .post();
+                        .request()
+                        .post(Entity.entity(metrics, MediaType.APPLICATION_JSON));
             } catch(Exception ex) {
                 logger.error("send to opentsdb endpoint failed", ex);
             }

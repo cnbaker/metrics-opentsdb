@@ -21,8 +21,7 @@ import java.util.Map;
 
 
 /**
- * @author Sean Scanlon <sean.scanlon@gmail.com>
- *         <p/>
+ * @author Sean Scanlon sean.scanlon@gmail.com
  *         Representation of a metric.
  */
 public class OpenTsdbMetric {
@@ -128,14 +127,3 @@ public class OpenTsdbMetric {
     }
 }
 
-/*
-{
-    "metric": "sys.cpu.nice",
-    "timestamp": 1346846400,
-    "value": 18,
-    "tags": {
-       "host": "web01",
-       "dc": "lga"
-    }
-}
- */
