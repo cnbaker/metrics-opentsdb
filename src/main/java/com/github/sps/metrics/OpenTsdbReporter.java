@@ -203,6 +203,10 @@ public class OpenTsdbReporter extends ScheduledReporter {
         this.tags = tags;
     }
 
+    public void setTag(String key, String value) {
+        tags.put(key, value);
+    }
+
     @Override
     public void report(SortedMap<String, Gauge> gauges, SortedMap<String, Counter> counters, SortedMap<String, Histogram> histograms, SortedMap<String, Meter> meters, SortedMap<String, Timer> timers) {
 

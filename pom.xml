@@ -9,7 +9,7 @@
 
     <groupId>com.github.sps.metrics</groupId>
     <artifactId>metrics-opentsdb</artifactId>
-    <version>1.0.4.sdl20151124-2</version>
+    <version>1.0.4.sdl20160321-1</version>
     <packaging>jar</packaging>
 
     <name>metrics-opentsdb</name>
@@ -237,7 +237,7 @@
                                         <limit implementation="org.jacoco.report.check.Limit">
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.90</minimum>
+                                            <minimum>0.80</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

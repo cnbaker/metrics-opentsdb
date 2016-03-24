@@ -122,6 +122,10 @@ public class OpenTsdbMetric {
         return tags;
     }
 
+    public OpenTsdbMetric setTag(String key, String value) {
+        tags.put(key, value); return this;
+    }
+
     private boolean equals(Object a, Object b) {
         return (a == b) || (a != null && a.equals(b));
     }
